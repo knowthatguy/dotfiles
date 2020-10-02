@@ -1,0 +1,395 @@
+;=========================================================
+;
+;
+;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+;
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/polybar/polybar
+;
+;   The README contains a lot of information
+;
+;==========================================================
+
+[colors]
+background = #2F333D
+background-alt = #4a4a4a
+foreground = #dfe6e9
+foreground-alt = #ffffff
+red = #f07178
+green = #c3e88d
+yellow = #ffcb6b
+blue = #82aaff
+purple = #c792ea
+cyan = #89ddff
+orange = #f78c6c
+magenta = #ff5370
+primary = ${colors.red}
+secondary = ${colors.purple}
+alert = ${colors.yellow}
+
+
+;------------;
+;  MAIN      ;
+;------------;
+
+[bar/main]
+line-size = 0
+line-color =
+
+border-size = 0
+border-color = #00000000
+
+
+
+;------------;
+; DIMENSIONS ;
+;------------;
+
+width = 100%
+height = 27
+;offset-y = 0
+;offset-x = 1540
+;offset is 1280*(1-0.width)
+
+border-top-size = 0
+border-bottom-size = 0
+border-right-size = 4
+border-left-size = 4
+
+;----------;
+; LOCATION ;
+;----------;
+
+bottom = false
+
+;-------;
+; FONTS ;
+;-------;
+
+font-0 = "SFNS Display:style=Regular:size=12:antialias=true;2"
+font-1 = "NotoSans Nerd Font:style=Regular:size=11;2"
+font-2 = "Segoe UI Symbol:style=Regular:size=12;1"
+font-3 = "Source Code Pro:style=Regular:size=12;3"
+font-4 = "Quivira:style=Regular:size=13;1"
+font-5 = "Scientifica:size=11;2"
+
+;---------------;
+; MISCELLANEOUS ;
+;---------------;
+
+radius = 6.0
+fixed-center = true
+padding-left = 1
+padding-right = 1
+background = ${colors.background}
+
+module-margin-left = 1
+module-margin-right = 1
+
+modules-left = powermenu i3
+modules-center = time-date
+modules-right = wlan div temperature div cpu div memory div battery div pulseaudio div root div
+
+tray-position = right
+tray-padding = 2
+tray-detached = false
+tray-maxsize = 22
+
+# wm-restack = i3
+override-redirect = false
+pseudo-transparency = false
+
+
+;---------;
+; MODULES ;
+;---------;
+
+
+[module/i3]
+type = internal/i3
+format = <label-state>  <label-mode>
+index-sort = true
+wrapping-scroll = false
+strip-wsnumbers = true
+
+label-mode-padding = 4
+label-mode = %mode%
+label-mode-foreground =
+label-mode-background =  ${colors.background}
+
+label-focused = %name%
+label-focused-background = ${colors.red}
+label-focused-foreground  =${colors.foreground}
+label-focused-padding = 4
+
+label-visible = %name%
+label-visible-underline = #555555
+label-visible-padding = 4
+
+label-unfocused = %name%
+label-unfocused-padding = 4
+
+label-urgent = %index%
+label-urgent-background = #1A73E8
+label-urgent-padding = 4
+label-separator = |
+
+
+[module/root]
+type = internal/fs
+interval = 25
+
+mount-0 = /
+
+label-mounted = %{F#00b894} %mountpoint%%{F-}: %percentage_used%%
+label-unmounted = %mountpoint%: %{F#d63031}{F-}
+label-unmounted-foreground = ${colors.foreground}
+
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.red}
+format-underline =
+label = %percentage:2%%
+
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.green}
+format-underline =
+label = %percentage_used%%
+
+
+[module/wlan]
+type = internal/network
+interface = wlp1s0
+interval = 5.0
+
+format-connected-prefix = "  "
+format-connected = <label-connected>
+format-connected-prefix-foreground =  ${colors.yellow}
+format-connected-foreground = ${colors.foreground}
+label-connected = %essid%
+label-connected-foreground = ${colors.foreground}
+
+format-disconnected =
+format-disconnected-prefix = ""
+
+
+[module/temperature]
+type = internal/temperature
+interval = 1.5
+thermal-zone = 0
+hwmon-path = /sys/class/hwmon/hwmon1/temp1_input
+base-temperature = 40
+warn-temperature = 60
+
+format = <ramp> <label>
+format-warn = <ramp> <label-warn>
+
+label = %temperature-c%
+label-warn =   %temperature-c%
+
+ramp-0 = %{F#0984e3}%{F-}
+ramp-1 = %{F#f5a70a}%{F-}
+ramp-2 = %{F#d63031}%{F-}
+
+
+[module/eth]
+type = internal/network
+interface = enp0s10
+interval = 5.0
+
+format-connected-prefix = " "
+format-connected-prefix-foreground = ${colors.foreground}
+format-connected-foreground = ${colors.foreground}
+label-connected = " "
+
+format-disconnected =
+
+
+[module/date]
+type = internal/date
+interval = 300
+
+date = "%d/%m/%Y"
+
+format-prefix = " "
+format-foreground = ${colors.foreground}
+format-prefix-foreground = ${colors.foreground}
+
+label = %date%
+
+
+[module/time]
+type = internal/date
+interval=1
+
+date =
+time = "%H:%M:%S"
+
+format-prefix = " "
+label = %time%
+
+format-foreground = ${colors.foreground}
+format-prefix-foreground = ${colors.foreground}
+
+
+[module/time-date]
+type = internal/date
+interval = 1
+
+date = " %H:%M:%S  "
+date-alt = " %d/%m/%y  "
+
+time = " "
+time-alt =  " "
+label = %date% %time%
+
+format-date-foreground = ${colors.foreground}
+format-time-foreground = ${colors.background-alt}
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+use-ui-max = true
+format-volume = <ramp-volume> <label-volume>
+
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+ramp-volume-3 = 
+ramp-volume-4 = 
+ramp-volume-5 = 
+ramp-volume-6 = 
+ramp-volume-7 = 
+ramp-volume-8 = 
+ramp-volume-9 = 
+ramp-volume-10 = 
+ramp-volume-11 = 
+
+
+label-volume = %percentage%%
+label-volume-foreground = ${colors.foreground}
+
+label-muted =  muted
+label-muted-foreground = #8a8381
+
+bar-volume-width = 20
+bar-volume-foreground-0 = ${colors.foreground}
+
+bar-volume-gradient = false
+bar-volume-indicator =
+bar-volume-indicator-font = 3
+bar-volume-fill = ─
+bar-volume-fill-font = 2
+bar-volume-empty = ─
+bar-volume-empty-font = 2
+bar-volume-empty-foreground = ${colors.foreground}
+
+
+[module/battery]
+type = internal/battery
+battery = BAT1
+adapter = ADP1
+full-at = 99
+poll-interval = 5
+time-format = %H:%M
+
+format-charging = <animation-charging>  <label-charging>
+;format-charging-underline = #ffb52a
+
+format-discharging = <animation-discharging>  <label-discharging>
+;format-discharging-underline = ${self.format-charging-underline}
+
+format-full-prefix = "   "
+;format-full = <ramp-capacity>
+format-full-prefix-foreground = ${colors.foreground}
+;format-full-underline = ${self.format-charging-underline}
+format-full-foreground = ${colors.foreground}
+ramp-capacity-0 = ▂
+ramp-capacity-1 = ▂▆
+ramp-capacity-2 = ▂▆▉
+ramp-capacity-foreground = ${colors.foreground-alt}
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+animation-charging-foreground = ${colors.cyan}
+animation-charging-framerate = 750
+
+animation-discharging-0 = 
+animation-discharging-1 = 
+animation-discharging-2 = 
+animation-discharging-3 = 
+animation-discharging-4 = 
+animation-discharging-foreground = ${colors.cyan}
+animation-discharging-framerate = 1750
+
+
+[module/powermenu]
+type = custom/menu
+
+expand-right = true
+
+format-spacing = 1
+
+label-open = " "
+label-open-foreground = ${colors.foreground}
+label-close =  " "
+label-close-foreground = ${colors.red}
+label-separator = " "
+label-separator-foreground =
+
+menu-0-0 = 
+menu-0-0-foreground = ${colors.foreground}
+menu-0-0-exec = i3-nagbar -m 'Do you want to power off your system?' -B '' 'poweroff' -t warning
+menu-0-1 = 
+menu-0-1-foreground = ${colors.foreground}
+menu-0-1-exec = i3-nagbar -m 'Do you want to reboot your system?' -B '' 'systemctl reboot' -t warning
+
+
+[module/div]
+type = custom/text
+content = %{F#414c50}|%{F-}
+
+
+[module/updates]
+type = custom/script
+
+;label-background = ${colors.bg}
+;label-padding = 0
+;label-underline = ${colors.modfg}
+
+exec =
+;tail = true
+interval = 60
+
+label  = " %output%"
+
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+;pseudo-transparency = false
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+; vim:ft=dosini
